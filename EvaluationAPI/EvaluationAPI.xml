@@ -1,0 +1,1601 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EvaluationAPI</name>
+    </assembly>
+    <members>
+        <member name="F:EvaluationAPI.Constants.ResultType.EVALUATE">
+            <summary>Evaluate further using result key</summary>
+        </member>
+        <member name="F:EvaluationAPI.Constants.ResultType.ACTION_PLAN">
+            <summary>Result contains an action plan key</summary>
+        </member>
+        <member name="T:EvaluationAPI.Controllers.AuthController">
+            <summary>
+            <c>Authentication</c> and <c>authorization</c> rest api controller class.
+            Contains all methods for performing auth rest api logic.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.AuthController.Signin(EvaluationAPI.DTO.UserDTO)">
+            <summary>
+            Sign in rest api controller.
+            </summary>
+            <param name="model">Transfers the username and the password to authenticate user.</param>
+            <exception cref="T:System.Exception">Thrown when <paramref name="model"/> is invalid or unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkObjectResult"/> with Bearer token and expiration date if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.UnauthorizedResult"/> if user is unauthorized.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if any error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.AuthController.Signup(EvaluationAPI.DTO.UserDTO)">
+            <summary>
+            Sign up rest api controller.
+            </summary>
+            <param name="model">Transfers the username and the password to generate user's credentials.</param>
+            <exception cref="T:System.Exception">Thrown when <paramref name="model"/> is invalid or unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if user already exists or unhandled error has occurred.
+            </returns>
+        </member>
+        <member name="T:EvaluationAPI.Controllers.EvaluationController">
+            <summary>
+            Evaluation rest api controller class.
+            Contains all methods for performing <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> evaluation.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationController.Evaluate(EvaluationAPI.Models.ServiceActivityReport)">
+            <summary>
+            <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> evaluation rest api controller.
+            </summary>
+            <param name="sar">Transfers <see cref="T:EvaluationAPI.Models.Origin"/>, <see cref="T:EvaluationAPI.Models.Location"/>, <see cref="T:EvaluationAPI.Models.Vehicle"/> data and <see cref="T:EvaluationAPI.Models.Fault"/> to be evaluated.</param>
+            <exception cref="T:System.Exception">Thrown when error in evaluation process has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with Action Plan Key if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestResult"/> if request data are invalid.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if any error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationController.ValidateSar(EvaluationAPI.Models.ServiceActivityReport)">
+            <summary>
+            <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> validator.
+            </summary>
+            <param name="sar">Transfers <see cref="T:EvaluationAPI.Models.Origin"/>, <see cref="T:EvaluationAPI.Models.Location"/>, <see cref="T:EvaluationAPI.Models.Vehicle"/>, <see cref="T:EvaluationAPI.Models.Component"/> and <see cref="T:EvaluationAPI.Models.Fault"/> to be validated.</param>
+            <returns>
+            Returns validation result message if <paramref name="sar"/> is invalid.
+            Returns null value if <paramref name="sar"/> is valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationController.IsValidComponent(EvaluationAPI.Models.Component)">
+            <summary>
+            <see cref="T:EvaluationAPI.Models.Component"/> validator.
+            </summary>
+            <remarks>
+            <paramref name="component"/> is valid if both <see cref="P:EvaluationAPI.Models.Component.Make"/> and <see cref="P:EvaluationAPI.Models.Component.Model"/> are not null or empty.
+            </remarks>
+            <param name="component">Transfers component data to be validated.</param>
+            <returns>
+            Retruns true if <paramref name="component"/> is valid. 
+            Returns false if <paramref name="component"/> is invalid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationController.IsEatonComponent(EvaluationAPI.Models.Component)">
+            <summary>
+            Check if <see cref="T:EvaluationAPI.Models.Component"/> belongs to Eaton.
+            </summary>
+            <remarks>
+            <paramref name="component"/> is Eaton's if <see cref="P:EvaluationAPI.Models.Component.Make"/> equals <see cref="F:EvaluationAPI.Constants.EATON_COMPONENT_NAME"/>.
+            </remarks>
+            <param name="component">Transfers component data to be checked.</param>
+            <returns>
+            Returns true if <paramref name="component"/> is Eaton's.
+            Returns false if <paramref name="component"/> is not Eaton's.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationController.IsValidFault(EvaluationAPI.Models.Fault)">
+            <summary>
+            <see cref="T:EvaluationAPI.Models.Fault"/> validator.
+            </summary>
+            <remarks>
+            <paramref name="fault"/> is valid if <see cref="P:EvaluationAPI.Models.Fault.Spn"/> is not null or empty and is a digit.
+            </remarks>
+            <param name="fault">Transfer fault data to be validated.</param>
+            <returns>
+            Returns true if <paramref name="fault"/> is valid.
+            Returns false if <paramref name="fault"/> is invalid.
+            </returns>
+        </member>
+        <member name="T:EvaluationAPI.Controllers.EvaluationRuleController">
+            <summary>
+            <c>EvaluationRule</c> rest api controller class.
+            Contains all methods for performing <see cref="T:EvaluationAPI.Models.EvaluationRule"/> CRUD operations, import and export.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.GetByRuleGroup(System.String)">
+            <summary>
+            Gets Evaluation Rules by RuleGroup rest api controller.
+            </summary>
+            <param name="ruleGroup">Used to filter Evaluation Rules by RuleGroup.</param>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with the list of <see cref="T:EvaluationAPI.Models.EvaluationRule"/> if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestResult"/> if <paramref name="ruleGroup"/> is empty, null or contains white spaces.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.Export(System.String)">
+            <summary>
+            Exports EvaluationRules by RuleGroup as an EXCEL file rest api controller.
+            </summary>
+            <param name="ruleGroup">Used to filter Evaluation Rules by RuleGroup.</param>
+            <exception cref="T:System.Exception">Throws if unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.FileResult"/> with EXCEL file if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestResult"/> if <paramref name="ruleGroup"/> is empty, null or contains white spaces.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an unhandled error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.GetAll">
+            <summary>
+            Gets all Evaluation Rules rest api controller.
+            </summary>
+            <exception cref="T:System.Exception">Throws if unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an unhandled error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.GetRuleGroups">
+            <summary>
+            Gets all Evaluation Rule RuleGroups rest api controller.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an unhandled error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.Save(EvaluationAPI.DTO.SaveRequestDTO)">
+            <summary>
+            Creates/Updates/Deletes Evaluation Rules rest api controller.
+            </summary>
+            <param name="request">Used to transfer <see cref="P:EvaluationAPI.DTO.SaveRequestDTO.Rules"/> and <see cref="P:EvaluationAPI.DTO.SaveRequestDTO.RulesToDelete"/> to change database state.</param>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <exception cref="T:EvaluationAPI.Exceptions.IException">Throws if <paramref name="request"/> is invalid or a database concurrency error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with updated or added Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.Add(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Adds Evaluation Rules rest api controller.
+            </summary>
+            <param name="rules">Evaluation Rules to be added.</param>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <exception cref="T:EvaluationAPI.Exceptions.IException">Throws if <paramref name="rules"/> is invalid or a database concurrency error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.Import(Microsoft.AspNetCore.Http.IFormFile,System.String,System.String)">
+            <summary>
+            Imports Evaluation Rules from EXCEL file rest api controller.
+            </summary>
+            <param name="file">EXCEL file to be imported.</param>
+            <param name="sheetName">EXCEL sheetname to be imported.</param>
+            <param name="rule">Evaluation Rule in JSON format used to link the EXCEL file Rules.</param>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <exception cref="T:EvaluationAPI.Exceptions.IException">Throws if Rules in EXCEL file are invalid or a database concurrency error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestResult"/> if <paramref name="sheetName"/>/<paramref name="rule"/>/<paramref name="file"/> is null or empty.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.InitRoot">
+            <summary>
+            Initializes Root Evaluation rest api controller.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <exception cref="T:EvaluationAPI.Exceptions.IException">Throws if a database concurrency error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with Root Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.AddRuleGroup(EvaluationAPI.Models.AddRuleGroupDTO)">
+            <summary>
+            Initializes new Rule Group rest api controller.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <exception cref="T:EvaluationAPI.Exceptions.IException">Throws if a database concurrency error has occurred.</exception>
+            <param name="request">Transfers <see cref="P:EvaluationAPI.Models.AddRuleGroupDTO.Rule"/> to which new RuleGroup must be linked and <see cref="P:EvaluationAPI.Models.AddRuleGroupDTO.Multiple"/> to specify new RuleGroup type.</param>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with updated EvaluationRules if success.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.Update(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Updates Evaluation Rules rest api controller.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <exception cref="T:EvaluationAPI.Exceptions.IException">Throws if a database concurrency error has occurred.</exception>
+            <param name="rules">Evaluation Rules to be updated.</param>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with updated Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.Delete(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Deletes Evaluation Rules rest api controller.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <exception cref="T:EvaluationAPI.Exceptions.IException">Throws if a database concurrency error has occurred.</exception>
+            <param name="rules">Evaluation rules to be deleted.</param>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with Evaluation Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.DeleteAllByRuleGroup(System.String)">
+            <summary>
+            Deletes Evaluation Rules by RuleGroup.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <param name="ruleGroup">RuleGroup to be deleted.</param>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with list of RuleGroups if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestResult"/> if <paramref name="ruleGroup"/> is invalid.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.DeleteAll">
+            <summary>
+            Deletes all Evaluation Rules.
+            </summary>
+            <exception cref="T:System.Exception">Throws if unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with the number of deleted Rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.MoveByRuleGroup(System.String)">
+            <summary>
+            Moves Evaluation Rules from the original database to the new database.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <param name="ruleGroup">RulGroup to be moved.</param>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with the number of moved rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestResult"/> if <paramref name="ruleGroup"/> is invalid.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Controllers.EvaluationRuleController.MoveAll">
+            <summary>
+            Moves all Evaluation Rules from the original database to the new database.
+            </summary>
+            <exception cref="T:System.Exception">Throws if an unhandled error has occurred.</exception>
+            <returns>
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.OkResult"/> with the number of moved rules if no error has occurred.
+            Returns <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult"/> with <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError"/> status code if an error has occurred.
+            </returns>
+        </member>
+        <member name="T:EvaluationAPI.Models.AddRuleGroupDTO">
+            <summary>
+            Data transfer object for rest api. Used in <see cref="M:EvaluationAPI.Controllers.EvaluationRuleController.AddRuleGroup(EvaluationAPI.Models.AddRuleGroupDTO)"/>.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.AddRuleGroupDTO.Rule">
+            <summary>
+            Rule to link new Rule Group.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.AddRuleGroupDTO.Multiple">
+            <summary>
+            Specify linked Rule Group.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Models.EvaluationRule">
+            <summary>
+            Evaluation Rule.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Models.EvaluationRule.#ctor(EvaluationAPI.Move.OriginalEvaluationRule,System.Int32,System.Int32)">
+            <summary>
+            Create Evaluation Rule from <see cref="T:EvaluationAPI.Move.OriginalEvaluationRule"/>.
+            </summary>
+            <param name="r">Original evaluation rule.</param>
+            <param name="i">New priority.</param>
+            <param name="ruleGroupChecksum">New RuleGroupChecksum.</param>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.Id">
+            <summary>
+            Unique ID for rule.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.RuleGroup">
+            <summary>
+            Rule Group.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.Priority">
+            <summary>
+            Priority.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.Prefix">
+            <summary>
+            Used for writing complex rules for doing logical operation with other rule.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.Suffix">
+            <summary>
+            Used for writing complex rules for doing logical operation with other Rule.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.OriginType">
+            <summary>
+            <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> (SAR) Origin Type.
+            </summary>
+            <remarks>
+            SR4, OTS, etc.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.EId">
+            <summary>
+            Evaluation Id.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.EResultType">
+            <summary>
+            Evaluation Result Type.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.Evaluate">
+            <summary>
+            Evaluation evaluate function.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.ComponentSourceAddress">
+            <summary>
+            Component Address.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.IsEaton">
+            <summary>
+            Is Eaton Component.
+            </summary>
+            <remarks>
+            Null value means it will not be checked.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.ProductFamilyId">
+            <summary>
+            Product Family ID.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.ProductCode">
+            <summary>
+            Product Code.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.FaultSourceAddress">
+            <summary>
+            Fault Source.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.FaultCode">
+            <summary>
+            FaultCode.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.Spn">
+            <summary>
+            Fault SPN.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.Fmi">
+            <summary>
+            Fault FMI.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.IsActive">
+            <summary>
+             Is Active Fault.
+            </summary>
+            <remarks>
+             Null value means it will not be checked.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.IsPrimaryFault">
+            <summary>
+            Flag to set fault as primary in Action Plan.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.ResultType">
+            <summary>
+            Evaluation Result Type.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.ResultKey">
+            <summary>
+            Evalution Result Key.
+            </summary>
+            <remarks>
+            Template Key or Evaluation sheetname.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.EvaluationRule.RuleGroupChecksum">
+            <summary>
+            ConcurrencyException idicator.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Models.EvaluationRule.ToEnum(System.Byte)">
+            <summary>
+            Converts Result Type to enum.
+            </summary>
+            <param name="resultType"></param>
+            <returns>Returns enum <see cref="T:EvaluationAPI.Constants.ResultType"/>.</returns>
+        </member>
+        <member name="T:EvaluationAPI.Models.EvaluationUser">
+            <summary>
+            Evaluation user.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Models.Component">
+            <summary>
+            Component detected while writing a <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/>.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.Protocol">
+            <summary>
+            Source protocol. 
+            </summary>
+            <remarks>
+            (1 = J1587; 2 = J1939).
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.SourceAddress">
+            <summary>
+            The source address of the component.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.Make">
+            <summary>
+            Component make if ProductFamilyId is unknown.
+            </summary>
+            <remarks>
+            Nullable.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.Model">
+            <summary>
+            Component model if ProductFamilyId is unknown.
+            </summary>
+            <remarks>
+            Nullable.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.SerialNumber">
+            <summary>
+            Component serial number if ProductFamilyId is unknown.
+            </summary>
+            <remarks>
+            Nullable.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.IsEaton">
+            <summary>
+            Flag to indicate if it is an Eaton Component.
+            </summary>
+            <remarks>
+            When this is true then ProductFamilyId and ProductCode should also be present.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.ProductFamilyId">
+            <summary>
+            Eaton Product Family ID.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Component.ProductCode">
+            <summary>
+            Eaton Product Code.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Models.Fault">
+            <summary>
+            A fault within a <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/>.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.Id">
+            <summary>
+            Fault ID.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.Protocol">
+            <summary>
+            Source protocol.
+            </summary>
+            <remarks>
+            (1 = J1587; 2 = J1939).
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.Source">
+            <summary>
+            The Source Address of the component with the fault.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.FaultCode">
+            <summary>
+            The Eaton-translated fault code.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.Spn">
+            <summary>
+            The PID/SID/SPN (Protocol Specific Parameter).
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.Fmi">
+            <summary>
+            The FMI of the fault code.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.SessionDate">
+            <summary>
+            Timestamp of when the fault reading session started.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.Latitude">
+            <summary>
+            The position of the vehicle when the fault was detected.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.Longitude">
+            <summary>
+            The position of the vehicle when the fault was detected.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Fault.IsActive">
+            <summary>
+            True if the fault is active, False otherwise
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Models.Location">
+            <summary>
+            Vehicle location.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Location.Country">
+            <summary>
+            Country name.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Models.Origin">
+            <summary>
+            Allows tracing of data back to the origin of that data.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Origin.OriginType">
+            <summary>
+            Origin Type.
+            </summary>
+            <remarks>
+            SR4 = ServiceRanger, OTS = Omnitracs, PPN = PeopleNet, etc.
+            </remarks>
+        </member>
+        <member name="T:EvaluationAPI.Models.ServiceActivityReport">
+            <summary>
+            Service Activity Report (SAR) Model for Evaluation.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.ServiceActivityReport.Id">
+            <summary>
+            Report ID.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.ServiceActivityReport.Origin">
+            <summary>
+            Report origin info.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.ServiceActivityReport.Vehicle">
+            <summary>
+            Vehicle info.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.ServiceActivityReport.Faults">
+            <summary>
+            List or faults
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.ServiceActivityReport.Location">
+            <summary>
+            Location info.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Models.Vehicle">
+            <summary>
+            Vehicle Information of <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/>.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Vehicle.Id">
+            <summary>
+            Vehicle Id.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Models.Vehicle.Components">
+            <summary>
+            Components of a vehicle.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Models.UserRoles">
+            <summary>
+            User roles.
+            </summary>
+        </member>
+        <member name="F:EvaluationAPI.Models.UserRoles.User">
+            <summary>
+            User role.
+            </summary>
+        </member>
+        <member name="F:EvaluationAPI.Models.UserRoles.Admin">
+            <summary>
+            Admin role.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.DTO.ErrorDTO">
+            <summary>
+            Evaluation rules <see cref="T:EvaluationAPI.Validator"/> error data transfer object.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.DTO.ErrorDTO.Id">
+            <summary>
+            Error Id.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.DTO.ErrorDTO.Message">
+            <summary>
+            Error message.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.DTO.SaveRequestDTO">
+            <summary>
+            Data transfer object used in rest api controller <see cref="M:EvaluationAPI.Controllers.EvaluationRuleController.Save(EvaluationAPI.DTO.SaveRequestDTO)"/>.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.DTO.SaveRequestDTO.Rules">
+            <summary>
+            Evaluation rules to add or update.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.DTO.SaveRequestDTO.RulesToDelete">
+            <summary>
+            Evaluation rules to delete.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.DTO.UserDTO">
+            <summary>
+            Data transfer object used in <see cref="T:EvaluationAPI.Controllers.AuthController"/>.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.DTO.UserDTO.Username">
+            <summary>
+            User username.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.DTO.UserDTO.Password">
+            <summary>
+            User password.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.DTO.UserDTO.Role">
+            <summary>
+            User role.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Evaluation.Models.EvaluationResult">
+            <summary>
+            Represents the result of an evaluation.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.EvaluationResult.ActionPlanKey">
+            <summary>
+            The action plan that was selected for the Service Activity Report, or null if
+            no action plan is needed.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.EvaluationResult.EvaluationComplete">
+            <summary>
+            Whether or not evaluation has been completed.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Evaluation.Models.ProcessResult">
+            <summary>
+            Storesresult of processing <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> against a list of rules.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.ProcessResult.ResultType">
+            <summary>
+            Result Type.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.ProcessResult.ResultKey">
+            <summary>
+            Evaluator name or template key.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Evaluation.Models.RuleExpression">
+            <summary>
+            Represents a Expression Node in Rule Expression Tree.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.RuleExpression.Childrens">
+            <summary>
+            Children nodes.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.RuleExpression.Expression">
+            <summary>
+            Rule Expression (Rule ID).
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.RuleExpression.Suffix">
+            <summary>
+            Suffix operation.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Evaluation.Models.RuleExpression.Rule">
+            <summary>
+            Associated rule info.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.Models.RuleExpression.Add(EvaluationAPI.Evaluation.Models.RuleExpression)">
+            <summary>
+            Adds a child expression.
+            </summary>
+            <param name="c">Child Expression to be added.</param>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.Models.RuleExpression.Remove(EvaluationAPI.Evaluation.Models.RuleExpression)">
+            <summary>
+            Remove a child expression.
+            </summary>
+            <param name="c">Child expression to be removed.</param>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.Models.RuleExpression.Evaluate">
+            <summary>
+            Evaluates the expression tree.
+            </summary>
+            <returns>Returns Evaluation Result.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.Models.RuleExpression.GetEvaluationRules">
+            <summary>
+            Get lists of rules associated with Expression Node.
+            </summary>
+            <returns>Returns lists of Rules associated with Expression Node.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.Models.RuleExpression.GetHighestPriority">
+            <summary>
+            Gets Highest priority value(Minimum Value) of all associated rules(Including Decendents).
+            </summary>
+            <returns>
+            Returns highest priority.
+            </returns>
+        </member>
+        <member name="T:EvaluationAPI.Evaluation.RuleExpressionBuilder">
+            <summary>
+            Rule Expression Builder class.
+            Contains all methods for building Expression Tree from a list of rules.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionBuilder.Build(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Builds Expression Tree from a list of rules.
+            </summary>
+            <param name="rules">List of rules to be processed.</param>
+            <returns>
+            Returns a list of <see cref="T:EvaluationAPI.Evaluation.Models.RuleExpression"/> in the form of a tree.
+            </returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:EvaluationAPI.Evaluation.RuleExpressionBuilder.BuildExpressionString(EvaluationAPI.Models.EvaluationRule[])" -->
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionBuilder.GetExpression(System.String,EvaluationAPI.Models.EvaluationRule[])">
+            <summary>
+            Build a expression node from given expression string.
+            </summary>
+            <param name="expressionString">Specified expression string.</param>
+            <param name="rules">Evaluation rules.</param>
+            <returns>Returns a new expression node containing zero or more Child Nodes.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionBuilder.FormatRuleSeparators(System.String)">
+            <summary>
+            Formats rule separator as single character representation.
+            </summary>
+            <remarks>
+            To simplify parsing.
+            </remarks>
+            <param name="opr">Template logic operator.</param>
+            <returns>Returns formatted logic operator.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionBuilder.EndsWithOperator(System.String)">
+            <summary>
+            Checks whether expression string ends with rule separator.
+            </summary>
+            <param name="str">Rule expression to check.</param>
+            <returns>Returns true if expression string ends with rule separator.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionBuilder.StartsWithOperator(System.String)">
+            <summary>
+            Checks whether expression string starts with rule separator.
+            </summary>
+            <param name="str">Rule expression to check.</param>
+            <returns>Returns true if expression string starts with rule separator.</returns>
+        </member>
+        <member name="T:EvaluationAPI.Evaluation.RuleExpressionProcessor">
+            <summary>
+            Rules Processor class.
+            Contains all methods for processing Evaluation Rules.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionProcessor.GetEvaluationResult(EvaluationAPI.Evaluation.Models.RuleExpression)">
+            <summary>
+            Gets Evaluation Result information from the Rule Expression.
+            </summary>
+            <param name="ruleExpression">Rule Expression that contains evaluation result information.</param>
+            <returns>Returns <see cref="T:EvaluationAPI.Evaluation.Models.ProcessResult"/> which stores Evaluation Result.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionProcessor.GetRuleExpressions(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule},EvaluationAPI.Models.ServiceActivityReport)">
+            <summary>
+            Process Rules and Build Rule Expression that can be evaluated individually.
+            </summary>
+            <param name="rules">List of Evaluation Rules.</param>
+            <param name="sar"><see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> to be evaluated.</param>
+            <returns>Returns list of <see cref="T:EvaluationAPI.Evaluation.Models.RuleExpression"/> which can be evaluated.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionProcessor.Evaluate(EvaluationAPI.Models.EvaluationRule,EvaluationAPI.Models.ServiceActivityReport)">
+            <summary>
+            Evaluates a <see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> against a specified rule.
+            </summary>
+            <remarks>
+            Any rule value is only matched if it has a value.
+            </remarks>
+            <param name="rule">Specified rule.</param>
+            <param name="sar"><see cref="T:EvaluationAPI.Models.ServiceActivityReport"/> to be evaluated.</param>
+            <returns>
+            Returns True if match found.
+            Returns False if match not found.
+            </returns>
+        </member>
+        <member name="T:EvaluationAPI.Evaluation.RuleExpressionReader">
+            <summary>
+            String Rule Expression Reader class.
+            Contains all methods for performing Rule Expression parse logic.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionReader.GetNextExpression(System.String@,System.String@)">
+            <summary>
+            Gets next Expression.
+            </summary>
+            <param name="expression">Next expression.</param>
+            <param name="suffix">Suffix for next Rule Expression.</param>
+            <returns>
+            Returns True if next expression is read. 
+            Returns False if no more expression to read.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Evaluation.RuleExpressionReader.ExitRead(System.String)">
+            <summary>
+            Checks whether next character signals a break in reading.
+            </summary>
+            <param name="c">Next character to check.</param>
+            <returns>Returns true if next character signals a break in expression.</returns>
+        </member>
+        <member name="T:EvaluationAPI.Excel.ExcelEvaluationRulesUtils">
+            <summary>
+            EXEL reader/wirter class.
+            Contains all methods for converting an EXCEL file into the list of Evaluation Rules and vice versa.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.ExcelToEvaluationRules(Microsoft.AspNetCore.Http.IFormFile,System.String)">
+            <summary>
+            Converts an EXCEL file into the list of Evaluation Rules.
+            </summary>
+            <exception cref="T:System.Exception">
+            Throws if <paramref name="file"/> is null or empty 
+            or <paramref name="sheetName"/> is null or empty 
+            or the worksheet is null or empty or has an invalid format.
+            </exception>
+            <param name="file">EXCEL file to be converted.</param>
+            <param name="sheetName">EXCEL file sheetname to be converted.</param>
+            <returns>
+            Returns the list of Evaluation Rules.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.EvaluationRulesToExcel(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule},System.String)">
+            <summary>
+            Converts the list of Evaluation Rules to an EXCEL file.
+            </summary>
+            <exception cref="T:System.Exception">
+            Throws if <paramref name="rules"/> are empty 
+            or <paramref name="ruleGroup"/> is empty or null.
+            </exception>
+            <param name="rules">Evaluation Rules to be converted.</param>
+            <param name="ruleGroup">EXEL file sheetname to be created.</param>
+            <returns>
+            Returns an EXCEL file as a byte array.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.RowToEvaluationRule(ClosedXML.Excel.IXLRow)">
+            <summary>
+            Converts the row of the EXCEL file into the Evaluation Rule.
+            </summary>
+            <exception cref="T:System.Exception">Throws if row cells are empty or null.</exception>
+            <param name="row">Row to be converted.</param>
+            <returns>
+            Returns the Evaluation Rule.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.ResultTypeToCellValue(System.Byte)">
+            <summary>
+            Stringifies the Result Type of the Evaluation Rule.
+            </summary>
+            <param name="value">Result Type to be stringified.</param>
+            <returns>
+            Returns the cell value as a string.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.ValidateColumnsNames(ClosedXML.Excel.IXLCell[])">
+            <summary>
+            Checks if the clumn names of the EXCEL file are valid..
+            </summary>
+            <param name="cells">Cells to be validated.</param>
+            <returns>
+            Returns true if names are valid.
+            Returns false if names are invalid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.CellToBool(ClosedXML.Excel.IXLCell)">
+            <summary>
+            Converts the cell value to a boolean type.
+            </summary>
+            <param name="cell">Cell to be converted.</param>
+            <returns>
+            Returns true if <paramref name="cell"/> is "TRUE".
+            Returns false if <paramref name="cell"/> is "FALSE".
+            Returns null if <paramref name="cell"/> is null or empty.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.BoolToCellValue(System.Nullable{System.Boolean})">
+            <summary>
+            Stringifies the boolean type value.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>
+            Returns "TRUE" if <paramref name="value"/> is true.
+            Returns "FALSE" if <paramref name="value"/> is false.
+            Returns null if <paramref name="value"/> is null.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.CellToResultType(ClosedXML.Excel.IXLCell)">
+            <summary>
+            Converts the cell to the Result Type of the Evaluation Rule.
+            </summary>
+            <param name="cell">Cell to be converted.</param>
+            <returns>
+            Returns Result Type of the Evaluation Rule.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Excel.ExcelEvaluationRulesUtils.GetWorksheetTemplate">
+            <summary>
+            Gets the worksheet tamplete.
+            </summary>
+            <returns>Returns the worksheet template to be filled.</returns>
+        </member>
+        <member name="T:EvaluationAPI.Exceptions.ConcurrencyException">
+            <summary>
+            Database concurrency exception.
+            </summary>
+        </member>
+        <member name="F:EvaluationAPI.Exceptions.ConcurrencyException.rules_">
+            <summary>
+            Lates database rules.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Exceptions.IException">
+            <summary>
+            Base exception.
+            </summary>
+        </member>
+        <member name="F:EvaluationAPI.Exceptions.IException.errors_">
+            <summary>
+            List of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/>.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Exceptions.IException.#ctor(System.Collections.Generic.List{EvaluationAPI.DTO.ErrorDTO})">
+            <summary>
+            Base contructor.
+            </summary>
+            <param name="errors">List of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/>.</param>
+        </member>
+        <member name="P:EvaluationAPI.Exceptions.IException.Errors">
+            <summary>
+            Gets list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/>.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Exceptions.IException.ToDictionary">
+            <summary>
+            Base converts object to dictionary.
+            </summary>
+            <returns>Returns dictionary.</returns>
+        </member>
+        <member name="T:EvaluationAPI.Exceptions.InvalidRulesException">
+            <summary>
+            Invalid rules exception used in <see cref="T:EvaluationAPI.Validator"/>.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Move.OriginalEvaluationRule">
+            <summary>
+            Original Evaluation Rule.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.Id">
+            <summary>
+            Unique ID for rule.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.RuleGroup">
+            <summary>
+            Rule Group.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.Priority">
+            <summary>
+            Priority.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.Prefix">
+            <summary>
+            Used for writing complex rules for doing logical operation with other rule.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.Suffix">
+            <summary>
+            Used for writing complex rules for doing logical operation with other Rule.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.OriginType">
+            <summary>
+            <see cref="!:ServiceActivityReport"/> (SAR) Origin Type.
+            </summary>
+            <remarks>
+            SR4, OTS, etc.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.ComponentSourceAddress">
+            <summary>
+            Component Address.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.IsEaton">
+            <summary>
+            Is Eaton Component.
+            </summary>
+            <remarks>
+            Null value means it will not be checked.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.ProductFamilyId">
+            <summary>
+            Product Family ID.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.ProductCode">
+            <summary>
+            Product Code.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.FaultSourceAddress">
+            <summary>
+            Fault Source.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.FaultCode">
+            <summary>
+            FaultCode.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.Spn">
+            <summary>
+            Fault SPN.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.Fmi">
+            <summary>
+            Fault FMI.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.IsActive">
+            <summary>
+             Is Active Fault.
+            </summary>
+            <remarks>
+             Null value means it will not be checked.
+            </remarks>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.IsPrimaryFault">
+            <summary>
+            Flag to set fault as primary in Action Plan.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.ResultType">
+            <summary>
+            Evaluation Result Type.
+            </summary>
+        </member>
+        <member name="P:EvaluationAPI.Move.OriginalEvaluationRule.ResultKey">
+            <summary>
+            Evalution Result Key.
+            </summary>
+            <remarks>
+            Template Key or Evaluation sheetname.
+            </remarks>
+        </member>
+        <member name="T:EvaluationAPI.Move.OriginalEvaluationRulesRepository">
+            <summary>
+            Original evaluation rules repository - Database context.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Move.OriginalEvaluationRulesRepository.GetEvaluationRules">
+            <summary>
+            Gets list of all evaluation rules.
+            </summary>
+            <returns>Returns list of all evaluation rules.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Move.OriginalEvaluationRulesRepository.GetEvaluationRulesByRuleGroup(System.String)">
+            <summary>
+            Gets list of evaluation rules by Rule Group.
+            </summary>
+            <param name="ruleGroup">Used to filter evaluation rules.</param>
+            <returns>Returns list of evaluation rules with same Rule Group that equals <paramref name="ruleGroup"/>.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Move.OriginalEvaluationRulesRepository.GetRuleGroups">
+            <summary>
+            Gets list of all Rule Groups.
+            </summary>
+            <returns>Returns list of all Rule Groups.</returns>
+        </member>
+        <member name="T:EvaluationAPI.Repository.AuthRepository">
+            <summary>
+            Auth repository - Database context.
+            </summary>
+        </member>
+        <member name="T:EvaluationAPI.Repository.EvaluationRulesRepository">
+            <summary>
+            Evaluation Rules repository - Database context.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.GetEvaluationRules">
+            <summary>
+            Gets all evaluation rules.
+            </summary>
+            <returns>Returns list of evaluation rules.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.GetEvaluationRulesByRuleGroup(System.String)">
+            <summary>
+            Gets list of evaluation rules by Rule Group.
+            </summary>
+            <param name="ruleGroup">Rule Group to filter.</param>
+            <returns>Returns a list of evaluation rules.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.IsRuleGroupExists(System.String)">
+            <summary>
+            Check if Rule Group exists.
+            </summary>
+            <param name="ruleGroup">RuleGroup to be checked.</param>
+            <returns>
+            Returns true if <paramref name="ruleGroup"/> exists.
+            Returns false if <paramref name="ruleGroup"/> dosn't exists.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.GetRuleGroups">
+            <summary>
+            Gets list of Rule Groups which are present in the database.
+            </summary>
+            <returns>Returns a list of Rule Groups.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.Add(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule},System.String)">
+            <summary>
+            Add new rules to the database.
+            </summary>
+            <param name="rules">Rules to be added.</param>
+            <param name="ruleGroup">Rule Group to be returned.</param>
+            <returns>Returns a list of rules.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.Update(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Updates rules in the database.
+            </summary>
+            <param name="rules">Rules to be updated.</param>
+            <returns>Returnes updated list of rules.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.DeleteAllByRuleGroup(System.String)">
+            <summary>
+            Deletes all rules with RuleGroup equals <paramref name="ruleGroup"/>.
+            </summary>
+            <param name="ruleGroup">RuleGroup to delete.</param>
+            <returns>Returns a list of rule groups.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Repository.EvaluationRulesRepository.DeleteAll">
+            <summary>
+            Deletes all rules.
+            </summary>
+            <returns>Returns count of deleted rules.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Services.EvaluationRuleService.AddRuleGroup(EvaluationAPI.Models.EvaluationRule,System.Boolean)">
+            <summary>
+            Adds new RuleGroup.
+            </summary>
+            <exception cref="T:System.Exception">
+            Throws if <paramref name="rule"/> is null or <paramref name="rule"/> RuleGroup, RuleGroupChecksum or ResultKey is null or empty
+            or database doesn't contains rules with <paramref name="rule"/> RuleGroup.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.ConcurrencyException">
+            Throws if database RuleGroupChecksum doesn't equals <paramref name="rule"/> RuleGroupChecksum.
+            </exception>
+            <param name="rule">Rule to link new rule group to.</param>
+            <param name="multiple">Complex rules indicator.</param>
+            <returns>
+            Returns list of rules by <paramref name="rule"/> RuleGroup.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Services.EvaluationRuleService.InitRoot">
+            <summary>
+            Initialize Root Evaluation.
+            </summary>
+            <exception cref="T:EvaluationAPI.Exceptions.ConcurrencyException">
+            Throws if Root Evaluation already exists.
+            </exception>
+            <returns>
+            Returns list of rules in Root Evaluation.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Services.EvaluationRuleService.SaveEvaluationRules(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule},System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Saves changes.
+            </summary>
+            <exception cref="T:System.Exception">
+            Throws if <paramref name="rules"/> RuleGroup is null or empty or <paramref name="rulesToDelete"/> RuleGroup is null or empty.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.ConcurrencyException">
+            Throws if <paramref name="rules"/> or <paramref name="rulesToDelete"/> RuleGroupChecksum is null or empty or doesn't equals database RuleGroupChecksum.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.InvalidRulesException">
+            Throws if evaluation rules are invalid.
+            </exception>
+            <param name="rules">Rules to add or update.</param>
+            <param name="rulesToDelete">Rules to delete.</param>
+            <returns>
+            Returns list of rules with RuleGroup equals <paramref name="rules"/> or <paramref name="rulesToDelete"/> RuleGroup.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Services.EvaluationRuleService.AddEvaluationRules(System.Collections.Generic.List{EvaluationAPI.Models.EvaluationRule},EvaluationAPI.Models.EvaluationRule)">
+            <summary>
+            Adds <paramref name="rules"/> and links to <paramref name="rule"/> 
+            or just adds if <paramref name="rules"/> RuleGroup equals Root Evaluation.
+            </summary>
+            <exception cref="T:System.Exception">
+            Throws if <paramref name="rule"/> is null or empty or <paramref name="rules"/> RuleGroup already exists.
+            Throws if <paramref name="rule"/> RuleGroup is null or empty.
+            Throws if <paramref name="rule"/> RuleGroup is Root Evaluation and <paramref name="rules"/> are complex.
+            Throws if database doesn't contains rules with <paramref name="rule"/> RuleGroup.
+            Throws if <paramref name="rule"/> is complex.
+            Throws if <paramref name="rule"/> is not Root Evaluation and <paramref name="rules"/> are not complex.
+            Trhows if <paramref name="rule"/> Id is not null and <paramref name="rule"/> ResultKey doesn't equals <paramref name="rules"/> RuleGroup.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.ConcurrencyException">
+            Throws if <paramref name="rule"/> RuleGroupChecksum doesn't equal database RuleGroupChecksum.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.InvalidRulesException">
+            Throws if evaluation rules are invalid.
+            </exception>
+            <param name="rules">Evaluation rules to be added.</param>
+            <param name="rule">Rule to be linked to.</param>
+            <returns>
+            Returns <paramref name="rules"/> if database was empty.
+            Returns <paramref name="rule"/> RuleGroup rules.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Services.EvaluationRuleService.UpdateEvaluationRules(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Update Evaluation Rules.
+            </summary>
+            <exception cref="T:System.Exception">
+            Throws if <paramref name="rulesToUpdate"/> RuleGroup is null or empty.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.ConcurrencyException">
+            Throws if <paramref name="rulesToUpdate"/> RuleGroupChecksum doesn't equals database RuleGroupChecksum.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.InvalidRulesException">
+            Throws if evaluation rules are invalid.
+            </exception>
+            <param name="rulesToUpdate">Rules to update.</param>
+            <returns>
+            Returns list of evaluation rules.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Services.EvaluationRuleService.DeleteEvaluationRules(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Delete Evaluation Rules.
+            </summary>
+            <exception cref="T:System.Exception">
+            Throws if <paramref name="rulesToDelete"/> RuleGroup is null or empty.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.ConcurrencyException">
+            Throws if <paramref name="rulesToDelete"/> RuleGroupChecksum doesn't equals database RuleGroupChecksum.
+            </exception>
+            <exception cref="T:EvaluationAPI.Exceptions.InvalidRulesException">
+            Throws if evaluation rules are invalid.
+            </exception>
+            <param name="rulesToDelete">Rules to delete.</param>
+            <returns>
+            Returns list of evaluation rules.
+            </returns>
+        </member>
+        <member name="T:EvaluationAPI.Services.EvaluationService">
+            <summary>
+            Evaluation service layer for <see cref="T:EvaluationAPI.Controllers.EvaluationController"/>.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Services.EvaluationService.Evaluate(EvaluationAPI.Models.ServiceActivityReport,System.String,EvaluationAPI.Evaluation.Models.EvaluationResult@)">
+            <summary>
+            Evaluates Service Activity Report.
+            </summary>
+            <exception cref="T:System.ArgumentException">Throws if <paramref name="key"/> is null or empty.</exception>
+            <exception cref="T:System.Exception">Throws if unhandled error has occurred.</exception>
+            <param name="sar">Service Activity Report to evaluate.</param>
+            <param name="key">Evaluation key.</param>
+            <param name="result">Evaluation result.</param>
+        </member>
+        <member name="T:EvaluationAPI.Validator">
+            <summary>
+            Evaluation rules validator.
+            </summary>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateRules(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Validate rules.
+            </summary>
+            <param name="rules">Rules to validate.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateSingleRules(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Validate not complex rules.
+            </summary>
+            <param name="rules">Rules to validate.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateMultipleRules(System.Collections.Generic.IEnumerable{EvaluationAPI.Models.EvaluationRule})">
+            <summary>
+            Validate complex rules.
+            </summary>
+            <param name="rules">Rules to validate.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateSingleRule(EvaluationAPI.Models.EvaluationRule)">
+            <summary>
+            Validate not complex evaluation rule.
+            </summary>
+            <param name="rule">Evaluation rule to validate.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateMultipleRule(EvaluationAPI.Models.EvaluationRule,System.String)">
+            <summary>
+            Validate complex evaluation rule.
+            </summary>
+            <param name="rule">Evaluation rule to validate.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateRule(EvaluationAPI.Models.EvaluationRule,System.String)">
+            <summary>
+            Validate evaluation rule.
+            </summary>
+            <param name="rule">Rule to validate.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidatePrefixAndSuffix(EvaluationAPI.Models.EvaluationRule,System.String)">
+            <summary>
+            Validate prefix and suffix possible cases.
+            </summary>
+            <param name="rule">Rule to validate.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateFault(EvaluationAPI.Models.EvaluationRule,System.String)">
+            <summary>
+            Validate fault info.
+            </summary>
+            <param name="rule">Rule to validate.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateComponent(EvaluationAPI.Models.EvaluationRule,System.String)">
+            <summary>
+            Validate component info.
+            </summary>
+            <param name="rule">Rule to validate.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateRuleGroupAndResultKey(EvaluationAPI.Models.EvaluationRule,System.String)">
+            <summary>
+            Validate RuleGroup and ResultKey possible cases.
+            </summary>
+            <param name="rule">Rule to validate.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidatePrefix(System.String,System.String)">
+            <summary>
+            Validate Prefix value.
+            </summary>
+            <param name="value">Prefix value to be validated.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateSuffix(System.String,System.String)">
+            <summary>
+            Validate Suffix value.
+            </summary>
+            <param name="value">Suffix value to be validated.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateOriginType(System.String,System.String)">
+            <summary>
+            Validate Origin Type value.
+            </summary>
+            <param name="value">Origin Type value.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateComponentSourceAddress(System.Nullable{System.Byte},System.String)">
+            <summary>
+            Validate ComponentSourceAddress value.
+            </summary>
+            <param name="value">ComponentSourceAddress value to be validated.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateSpn(System.String,System.String)">
+            <summary>
+            Validate Spn value.
+            </summary>
+            <param name="value">Spn value to be validated.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateFmi(System.Nullable{System.Byte},System.String)">
+            <summary>
+            Validate Fmi value.
+            </summary>
+            <param name="value">Fmi value to be validated.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateRuleGroup(System.String,System.String)">
+            <summary>
+            Validate RuleGroup value.
+            </summary>
+            <param name="value">RuleGroup value to be validated.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.ValidateResultKey(System.String,System.String)">
+            <summary>
+            Validate ResultKey value.
+            </summary>
+            <param name="value">ResultKey value to be validated.</param>
+            <param name="id">Error Id.</param>
+            <returns>
+            Returns not empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if invalid.
+            Returns empty list of <see cref="T:EvaluationAPI.DTO.ErrorDTO"/> if valid.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.IsStartRule(EvaluationAPI.Models.EvaluationRule)">
+            <summary>
+            Check if rule is start rule of complex expression.
+            </summary>
+            <param name="rule">Rule to be checked.</param>
+            <returns>
+            Returns true if rule is start rule of complex expression.
+            Returns false if rule is not start rule of complex expression.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.IsEndRule(EvaluationAPI.Models.EvaluationRule)">
+            <summary>
+            Check if rule is end rule of complex expression.
+            </summary>
+            <param name="rule">Rule to be checked.</param>
+            <returns>
+            Returns true if rule is end rule of complex expression.
+            Returns false if rule is not end rule of complex expression.
+            </returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.GetErrorId(System.Int32,System.Int32)">
+            <summary>
+            Generate Error Id.
+            </summary>
+            <param name="x">Complex rule priority.</param>
+            <param name="y">Sub rule priority.</param>
+            <returns>Returns error id.</returns>
+        </member>
+        <member name="M:EvaluationAPI.Validator.IsMultiple(EvaluationAPI.Models.EvaluationRule)">
+            <summary>
+            Check if rule is complex.
+            </summary>
+            <param name="rule">Rule to be checked.</param>
+            <returns>
+            Returns true if rule is complex.
+            Returns false if rule is not complex.
+            </returns>
+        </member>
+    </members>
+</doc>
